@@ -1,16 +1,21 @@
 #!/usr/bin/python3
-"""Script that fetch 10 hot post for a given subreddit."""
+"""Module for top_ten function"""
 import requests
 
 
-def number_of_subscribers(subreddit):
-    """Return the number of subscribers for the given subreddit."""
-    url = f"https://www.reddit.com/r/{subreddit}/about.json"
+def top_ten(subreddit):
+    """Query the Reddit API and print the titles of the top 10 posts."""
+    url = "https://www.reddit.com/r/{}/hot.json?limit=10".format(subreddit)
     headers = {'User-Agent': 'My User Agent 1.0'}
-    response = requests.get(url, headers=headers, allow_redirects=False)
+    response = requests.get(url, headers=headers)
 
     if response.status_code == 200:
-        data = response.json().get('data')
-        if data:
-            return data.get('subscribers', 0)
-    return 0
+        data = response.json().get('data').get('children')
+        for post in data:
+            print(post.get('data').get('title'))
+    else:
+        print(None)
+
+
+subreddit_name = "learnpython"  
+top_ten(subreddit_name)
